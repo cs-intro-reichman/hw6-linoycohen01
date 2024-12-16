@@ -19,6 +19,25 @@ public class Runigram {
 		image = flippedHorizontally(tinypic);
 		System.out.println();
 		print(image);
+
+		// Tests the vertical flipping of an image:
+		Color[][] image2;
+		image2 = scaled(tinypic , 3,5);
+		System.out.println("scaled:");
+		print(image2);
+
+		// Tests the luminance  of an image:
+		//Color[][] image3;
+		//image3 = flippedVertically(tinypic);
+		//System.out.println();
+		//print(image3);
+		Color c = new Color(100, 0, 0);
+		c = luminance(c);
+		System.out.println("luminance ");
+		print(c);
+
+
+		
 		
 		//// Write here whatever code you need in order to test your work.
 		//// You can continue using the image array.
@@ -40,7 +59,16 @@ public class Runigram {
 		// creates from the 3 colors a new Color object, and 
 		// makes pixel (i,j) refer to that object.
 		//// Replace the following statement with your code.
-		return null;
+		for (int i = 0; i < numRows; i++){
+			for(int j = 0; j < numCols; j++){
+				//int red = in.readInt();
+				//int green = in.readInt();
+				//int blue = in.readInt();
+				Color c = new Color (in.readInt(), in.readInt(), in.readInt());
+				image[i][j] = c;
+			}
+		}
+		return image;
 	}
 
     // Prints the RGB values of a given color.
@@ -60,6 +88,12 @@ public class Runigram {
 	private static void print(Color[][] image) {
 		//// Replace this comment with your code
 		//// Notice that all you have to so is print every element (i,j) of the array using the print(Color) function.
+		for (int i = 0 ; i < image.length; i++){
+			for (int j = 0; j < image[0].length; j++){
+				print(image[i][j]);
+			}
+			System.out.println();
+		}
 	}
 	
 	/**
@@ -67,7 +101,16 @@ public class Runigram {
 	 */
 	public static Color[][] flippedHorizontally(Color[][] image) {
 		//// Replace the following statement with your code
-		return null;
+		int N = image.length;
+		int M = image[0].length;
+		Color[][] newImage = new Color[N][M];
+		for (int i = 0; i < N; i++){
+			for (int j = 0; j < M; j++){
+				newImage[i][M - j - 1] = image[i][j];
+			}
+		}
+
+		return newImage;
 	}
 	
 	/**
@@ -75,15 +118,25 @@ public class Runigram {
 	 */
 	public static Color[][] flippedVertically(Color[][] image){
 		//// Replace the following statement with your code
-		return null;
+		int N = image.length;
+		int M = image[0].length;
+		Color[][] newImage = new Color[N][M];
+		for (int i = 0; i < N; i++){
+			for (int j = 0; j < M; j++){
+				newImage[N - i - 1][j] = image[i][j];
+			}
+		}
+
+		return newImage;
 	}
 	
 	// Computes the luminance of the RGB values of the given pixel, using the formula 
 	// lum = 0.299 * r + 0.587 * g + 0.114 * b, and returns a Color object consisting
 	// the three values r = lum, g = lum, b = lum.
 	private static Color luminance(Color pixel) {
-		//// Replace the following statement with your code
-		return null;
+		int lum = (int)(pixel.getRed() * 0.299 + pixel.getGreen() * 0.587 + pixel.getBlue() * 0.114);
+		Color c = new Color(lum, lum, lum);
+		return c;
 	}
 	
 	/**
@@ -91,7 +144,17 @@ public class Runigram {
 	 */
 	public static Color[][] grayScaled(Color[][] image) {
 		//// Replace the following statement with your code
-		return null;
+		int N = image.length;
+		int M = image[0].length;
+		Color[][] newImage = new Color[N][M];
+		for (int i = 0; i < N; i++){
+			for (int j = 0; j < M; j++){
+				newImage[i][j] = luminance(image[i][j]);
+
+			}
+		}
+
+		return newImage;
 	}	
 	
 	/**
@@ -99,8 +162,18 @@ public class Runigram {
 	 * The image is scaled (resized) to have the given width and height.
 	 */
 	public static Color[][] scaled(Color[][] image, int width, int height) {
-		//// Replace the following statement with your code
-		return null;
+		int imageH = image.length;
+		int imageW = image[0].length;
+		Color[][] target = new Color[height][width];
+		for (int i = 0; i < height; i++){
+			for (int j = 0; j < width; j++){
+				int sourcei = (int)((i * imageH) / height);
+				int sourceJ = (int)((j  *imageW) / width);
+
+				target[i][j] = image[sourcei][sourceJ];
+			}
+		}
+		return target;
 	}
 	
 	/**
@@ -140,7 +213,7 @@ public class Runigram {
 		StdDraw.setTitle("Runigram 2023");
 		int height = image.length;
 		int width = image[0].length;
-		StdDraw.setCanvasSize(width, height);
+		StdDraw.setCanvasSize(height, width);
 		StdDraw.setXscale(0, width);
 		StdDraw.setYscale(0, height);
         // Enables drawing graphics in memory and showing it on the screen only when
