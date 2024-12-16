@@ -31,10 +31,12 @@ public class Runigram {
 		//image3 = flippedVertically(tinypic);
 		//System.out.println();
 		//print(image3);
-		Color c = new Color(100, 0, 0);
-		c = luminance(c);
-		System.out.println("luminance ");
+		Color c1 = new Color(100, 40, 100);
+		Color c2 = new Color(200, 20, 40);
+		Color c = blend(c1, c2, 0.25);
+		System.out.println("blended ");
 		print(c);
+		
 
 
 		
@@ -183,8 +185,11 @@ public class Runigram {
 	 * values in the two input color.
 	 */
 	public static Color blend(Color c1, Color c2, double alpha) {
-		//// Replace the following statement with your code
-		return null;
+		int r = (int)((c1.getRed() * alpha) + c2.getRed() * (1 - alpha));
+		int g = (int)((c1.getGreen() * alpha) + c2.getGreen() * (1 - alpha));
+		int b = (int)((c1.getBlue() * alpha) + c2.getBlue() * (1 - alpha));
+
+		return new Color(r, g, b);
 	}
 	
 	/**
@@ -194,8 +199,15 @@ public class Runigram {
 	 * The two images must have the same dimensions.
 	 */
 	public static Color[][] blend(Color[][] image1, Color[][] image2, double alpha) {
-		//// Replace the following statement with your code
-		return null;
+		int N = image1.length;
+		int M = image1[0].length;
+		Color[][] newImage = new Color[N][M];
+		for (int i = 0; i < N; i++){
+			for (int j = 0; j < M; j++){
+				newImage[i][j] = blend(image1[i][j], image2[i][j], alpha);
+			}
+		}
+		return newImage;
 	}
 
 	/**
@@ -205,7 +217,14 @@ public class Runigram {
 	 * of the source image.
 	 */
 	public static void morph(Color[][] source, Color[][] target, int n) {
-		//// Replace this comment with your code
+		Color[][] scaledTarget = scaled(target, source[0].length, source.length);
+		setCanvas(source);
+		for (int i = 0; i <= n; i++){
+			double alpa = (double)((n - i) / n);
+			Color[][] blended = blend(source, scaledTarget, alpa);
+			display(blended);
+		    StdDraw.pause(3000); 
+		}
 	}
 	
 	/** Creates a canvas for the given image. */
