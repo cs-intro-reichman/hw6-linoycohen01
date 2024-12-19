@@ -8,36 +8,48 @@ public class Runigram {
 		//// Hide / change / add to the testing code below, as needed.
 		
 		// Tests the reading and printing of an image:	
-		Color[][] tinypic = read("tinypic.ppm");
-		print(tinypic);
+		//Color[][] tinypic = read("tinypic.ppm");
+		//print(tinypic);
 
 		// Creates an image which will be the result of various 
 		// image processing operations:
-		Color[][] image;
+		//Color[][] image;
 
 		// Tests the horizontal flipping of an image:
-		image = flippedHorizontally(tinypic);
-		System.out.println();
-		print(image);
+		//image = flippedHorizontally(tinypic);
+		//System.out.println();
+		//print(image);
 
 		// Tests the vertical flipping of an image:
-		Color[][] image2;
-		image2 = scaled(tinypic , 3,5);
-		System.out.println("scaled:");
-		print(image2);
+		//Color[][] image2;
+		//image2 = scaled(tinypic , 3,5);
+		//System.out.println("scaled:");
+		//print(image2);
 
 		// Tests the luminance  of an image:
 		//Color[][] image3;
 		//image3 = flippedVertically(tinypic);
 		//System.out.println();
 		//print(image3);
-		Color c1 = new Color(100, 40, 100);
-		Color c2 = new Color(200, 20, 40);
-		Color c = blend(c1, c2, 0.25);
-		System.out.println("blended ");
-		print(c);
+		//Color c1 = new Color(100, 40, 100);
+		//Color c2 = new Color(200, 20, 40);
+		//Color c = blend(c1, c2, 0.25);
+		//System.out.println("blended ");
+		//print(c);
 		
-
+		/////////////////
+			Color[][] img1 = read("escher.ppm");
+			Color[][] img2 = read("eyes.ppm");
+	
+			Color[][] blended = Runigram.blend(img1, img2, 0);
+			Color[][] res = img2;
+			
+			
+			boolean res1 = compareImages(blended, res);
+			System.out.println(res1);
+	
+	
+	
 
 		
 		
@@ -185,6 +197,12 @@ public class Runigram {
 	 * values in the two input color.
 	 */
 	public static Color blend(Color c1, Color c2, double alpha) {
+		if (alpha == 0) {
+			return c2; 
+		}
+		if (alpha == 1) {
+			return c1; 
+		}
 		int r = (int)((c1.getRed() * alpha) + c2.getRed() * (1 - alpha));
 		int g = (int)((c1.getGreen() * alpha) + c2.getGreen() * (1 - alpha));
 		int b = (int)((c1.getBlue() * alpha) + c2.getBlue() * (1 - alpha));
@@ -199,6 +217,12 @@ public class Runigram {
 	 * The two images must have the same dimensions.
 	 */
 	public static Color[][] blend(Color[][] image1, Color[][] image2, double alpha) {
+		if (alpha == 0) {
+			return image2; 
+		}
+		if (alpha == 1) {
+			return image1; 
+		}
 		int N = image1.length;
 		int M = image1[0].length;
 		Color[][] newImage = new Color[N][M];
@@ -256,5 +280,25 @@ public class Runigram {
 		}
 		StdDraw.show();
 	}
+	public static boolean compareImages(Color[][] img1, Color[][] img2) {
+        if (img1.length != img2.length || img1[0].length != img2[0].length) {
+            return false;
+        }
+
+        for (int i = 0; i < img1.length; i++) {
+            for (int j = 0; j < img1[0].length; j++) {
+                if (!compareColors(img1[i][j], img2[i][j])) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    } 
+	public static boolean compareColors(Color c1, Color c2) {
+        return c1.getRed() == c2.getRed() &&
+               c1.getGreen() == c2.getGreen() &&
+               c1.getBlue() == c2.getBlue();
+    }
+
 }
 
