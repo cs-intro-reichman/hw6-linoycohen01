@@ -47,6 +47,14 @@ public class Runigram {
 			
 			boolean res1 = compareImages(blended, res);
 			System.out.println(res1);
+
+			blended = Runigram.blend(img1, img2, 0.21);
+        res = read("expected_results/blend_021.ppm");
+        
+        
+        boolean res2 = compareImages(blended, res);
+		System.out.println(res2);
+
 	
 	
 	
@@ -203,9 +211,9 @@ public class Runigram {
 		if (alpha == 1) {
 			return c1; 
 		}
-		int r = (int)((c1.getRed() * alpha) + c2.getRed() * (1 - alpha));
-		int g = (int)((c1.getGreen() * alpha) + c2.getGreen() * (1 - alpha));
-		int b = (int)((c1.getBlue() * alpha) + c2.getBlue() * (1 - alpha));
+		int r = (int) (alpha * c1.getRed() + (1 - alpha) * c2.getRed());
+        int g = (int) (alpha * c1.getGreen() + (1 - alpha) * c2.getGreen());
+        int b = (int) (alpha * c1.getBlue() + (1 - alpha) * c2.getBlue());
 
 		return new Color(r, g, b);
 	}
@@ -223,8 +231,11 @@ public class Runigram {
 		if (alpha == 1) {
 			return image1; 
 		}
+
 		int N = image1.length;
 		int M = image1[0].length;
+		image2 = scaled(image2, M, N);
+
 		Color[][] newImage = new Color[N][M];
 		for (int i = 0; i < N; i++){
 			for (int j = 0; j < M; j++){
@@ -244,7 +255,7 @@ public class Runigram {
 		Color[][] scaledTarget = scaled(target, source[0].length, source.length);
 		setCanvas(source);
 		for (int i = 0; i <= n; i++){
-			double alpa = (double)((n - i) / n);
+			double alpa = (double)(n - i) / n;
 			Color[][] blended = blend(source, scaledTarget, alpa);
 			display(blended);
 		    StdDraw.pause(3000); 
@@ -280,20 +291,37 @@ public class Runigram {
 		}
 		StdDraw.show();
 	}
-	public static boolean compareImages(Color[][] img1, Color[][] img2) {
-        if (img1.length != img2.length || img1[0].length != img2[0].length) {
-            return false;
-        }
+	//public static boolean compareImages(Color[][] img1, Color[][] img2) {
+      //if (img1.length != img2.length || img1[0].length != img2[0].length) {
+		//	System.out.println("1");
+        //    return false;
+       // }
 
-        for (int i = 0; i < img1.length; i++) {
-            for (int j = 0; j < img1[0].length; j++) {
-                if (!compareColors(img1[i][j], img2[i][j])) {
-                    return false;
-                }
+       // for (int i = 0; i < img1.length; i++) {
+         //   for (int j = 0; j < img1[0].length; j++) {
+           //     if (!compareColors(img1[i][j], img2[i][j])) {
+			//		System.out.println("2");
+              ///      return false;
+              //  }
+           // }
+       // }
+       // return true;
+   // } 
+   public static boolean compareImages(Color[][] img1, Color[][] img2) {
+    if (img1.length != img2.length || img1[0].length != img2[0].length) {
+        return false;
+    }
+    for (int i = 0; i < img1.length; i++) {
+        for (int j = 0; j < img1[0].length; j++) {
+            if (!compareColors(img1[i][j], img2[i][j])) {
+                System.out.println("Mismatch at pixel (" + i + ", " + j + ")");
+                return false;
             }
         }
-        return true;
-    } 
+    }
+    return true;
+}
+
 	public static boolean compareColors(Color c1, Color c2) {
         return c1.getRed() == c2.getRed() &&
                c1.getGreen() == c2.getGreen() &&
